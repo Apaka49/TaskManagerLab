@@ -1,0 +1,25 @@
+﻿<Page x:Class="TaskManager.WPF.ProjectDetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Project Details">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="ProjectTitleText" FontSize="26" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,10" />
+        <TextBlock x:Name="ProjectDescriptionText" FontSize="16" Grid.Row="1" Margin="0,0,0,5" TextWrapping="Wrap" />
+        <TextBlock x:Name="ProjectTypeText" FontSize="14" FontStyle="Italic" Grid.Row="2" Margin="0,0,0,20" />
+
+        <TextBlock Text="Tasks:" FontSize="20" FontWeight="Bold" Grid.Row="3" Margin="0,0,0,10" />
+
+        <ListBox x:Name="TasksList" Grid.Row="4" DisplayMemberPath="Title" FontSize="16" SelectionChanged="TasksList_SelectionChanged" />
+
+        <Button Content="Back to Projects" Width="150" Height="30" Grid.Row="5" HorizontalAlignment="Left" Margin="0,20,0,0" Click="BackButton_Click" />
+    </Grid>
+</Page>

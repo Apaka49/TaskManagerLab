@@ -1,0 +1,19 @@
+﻿<Page x:Class="TaskManager.WPF.ProjectsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Projects">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="My Projects" FontSize="26" FontWeight="Bold" Margin="0,0,0,20" />
+
+        <ListBox x:Name="ProjectsList" 
+                 Grid.Row="1" 
+                 DisplayMemberPath="Title" 
+                 FontSize="16"
+                 SelectionChanged="ProjectsList_SelectionChanged" />
+    </Grid>
+</Page>

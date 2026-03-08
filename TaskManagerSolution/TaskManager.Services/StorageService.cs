@@ -4,7 +4,7 @@ using TaskManager.Storage;
 
 namespace TaskManager.Services
 {
-    public class StorageService
+    public class StorageService : IStorageService
     {
         private static readonly List<ProjectStorageModel> Projects = new List<ProjectStorageModel>();
         private static readonly List<TaskStorageModel> Tasks = new List<TaskStorageModel>();
