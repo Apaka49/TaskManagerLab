@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using TaskManager.Storage;
 
-namespace TaskManager.Services
+namespace TaskManager.Repositories
 {
-    public class StorageService : IStorageService
+    internal static class FakeStorage
     {
-        private static readonly List<ProjectStorageModel> Projects = new List<ProjectStorageModel>();
-        private static readonly List<TaskStorageModel> Tasks = new List<TaskStorageModel>();
+        public static List<ProjectStorageModel> Projects { get; } = new List<ProjectStorageModel>();
+        public static List<TaskStorageModel> Tasks { get; } = new List<TaskStorageModel>();
 
-        static StorageService()
+        static FakeStorage()
         {
             var project1 = new ProjectStorageModel("Website Redesign", "Overhaul the main corporate website", ProjectType.Work);
             var project2 = new ProjectStorageModel("Learn C#", "Complete all C# university assignments", ProjectType.Educational);
@@ -48,29 +48,6 @@ namespace TaskManager.Services
                 DateTime.Now.AddDays(5),
                 false
             ));
-        }
-
-        public List<ProjectStorageModel> GetAllProjects()
-        {
-            return Projects;
-        }
-
-        public List<TaskStorageModel> GetAllTasks()
-        {
-            return Tasks;
-        }
-
-        public List<TaskStorageModel> GetTasksByProjectId(Guid projectId)
-        {
-            var result = new List<TaskStorageModel>();
-            foreach (var task in Tasks)
-            {
-                if (task.ProjectId == projectId)
-                {
-                    result.Add(task);
-                }
-            }
-            return result;
         }
     }
 }

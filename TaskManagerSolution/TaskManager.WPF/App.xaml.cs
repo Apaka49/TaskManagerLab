@@ -1,32 +1,43 @@
-﻿using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Windows;
+using TaskManager.Repositories;
 using TaskManager.Services;
+using TaskManager.WPF.ViewModels;
 
 namespace TaskManager.WPF
 {
     public partial class App : Application
     {
-        public static ServiceProvider ServiceProvider { get; private set; }
+        public IServiceProvider ServiceProvider { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             var serviceCollection = new ServiceCollection();
-
-            serviceCollection.AddSingleton<IStorageService, StorageService>();
-
-            serviceCollection.AddTransient<MainWindow>();
-            serviceCollection.AddTransient<ProjectsPage>();
-            serviceCollection.AddTransient<ProjectDetailsPage>();
-            serviceCollection.AddTransient<TaskDetailsPage>();
+            ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
 
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+            var mainViewModel = ServiceProvider.GetRequiredService<MainViewModel>();
 
-            var startPage = ServiceProvider.GetRequiredService<ProjectsPage>();
-            mainWindow.NavigateToPage(startPage);
+            mainViewModel.NavigateToProjectsList();
+
+            mainWindow.Show();
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<IProjectRepository, ProjectRepository>();
+            services.AddSingleton<ITaskRepository, TaskRepository>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<ITaskService, TaskService>();
+            services.AddSingleton<MainViewModel>();
+            services.AddTransient<MainWindow>();
+            services.AddTransient<ProjectsViewModel>();
+            services.AddTransient<ProjectDetailsViewModel>();
+            services.AddTransient<TaskDetailsViewModel>();
         }
     }
 }

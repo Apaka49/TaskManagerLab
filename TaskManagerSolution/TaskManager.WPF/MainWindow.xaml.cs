@@ -1,18 +1,14 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
+using TaskManager.WPF.ViewModels;
 
 namespace TaskManager.WPF
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
-        }
-
-        public void NavigateToPage(Page page)
-        {
-            MainFrame.Navigate(page);
+            DataContext = viewModel;
         }
     }
 }
