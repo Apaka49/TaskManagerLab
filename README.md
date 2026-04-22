@@ -1,29 +1,35 @@
-# Task Manager - Лабораторні роботи (C# / WPF)
+# Task Manager Application (Final Project)
 
-Цей репозиторій містить поетапну розробку застосунку для управління проєктами та завданнями (Task Manager). 
+A professional task management system built with C# and WPF, following modern software engineering principles and architectural patterns.
 
-## Опис проєкту
-Застосунок дозволяє переглядати список проєктів, детальну інформацію про кожен проєкт, а також список завдань, прив'язаних до конкретного проєкту. Реалізовано навігацію між сторінками та базовий візуальний інтерфейс.
+## Architecture & Patterns
+The project implements a **3-Tier (N-Tier) Architecture** combined with the **MVVM (Model-View-ViewModel)** design pattern:
+1.  **TaskManager.WPF (Presentation Layer):**
+    * Responsive UI with WPF.
+    * MVVM pattern for clear separation of concerns.
+    * Asynchronous commands and UI state management (`IsBusy` indicator).
+2.  **TaskManager.Services (Business Layer):**
+    * Business logic implementation.
+    * Data Transfer Objects (DTOs) for secure communication between layers.
+3.  **TaskManager.Repositories (Data Layer):**
+    * **Entity Framework Core** with **SQLite** for persistent storage.
+    * Repository pattern for data abstraction.
+    * Cascade deletion for data integrity.
 
-## Архітектура (Лабораторна робота №3)
-У третій лабораторній роботі застосунок було повністю відрефакторено. Тепер він базується на багатошаровій архітектурі та патерні MVVM, що забезпечує чіткий поділ відповідальностей:
+## Key Features
+* **Full CRUD:** Create, Read, Update, and Delete operations for both Projects (Level 1) and Tasks (Level 2).
+* **Real-time Search:** Filter lists dynamically as you type.
+* **Sorting:** Toggle alphabetical sorting for all lists.
+* **Async/Await:** Non-blocking UI during database operations.
+* **Auto-Seeding:** Initial database population on the first launch.
+* **Modern UI:** Clean, responsive design with loading indicators and visual feedback.
 
-1. **Рівень сховища (Repositories)**
-   - Відповідає за роботу з даними.
-   - Включає моделі даних (`ProjectStorageModel`, `TaskStorageModel`) та штучне сховище (`FakeStorage`).
-   - Доступ до даних відбувається виключно через інтерфейси репозиторіїв (`IProjectRepository`, `ITaskRepository`).
+## Technologies
+* **.NET 8.0**
+* **WPF** (Windows Presentation Foundation)
+* **Entity Framework Core**
+* **SQLite**
+* **Microsoft.Extensions.DependencyInjection** (IoC/DI)
 
-2. **Рівень сервісів (Services)**
-   - Відповідає за бізнес-логіку та підготовку даних для UI.
-   - Отримує дані з репозиторіїв і перетворює їх на DTO (Data Transfer Objects), щоб передавати на UI лише необхідну інформацію.
-   - Створено окремі DTO для списків (`ProjectListDto`, `TaskListDto`) та для детального перегляду (`ProjectDetailDto`, `TaskDetailDto`).
-
-3. **Рівень інтерфейсу (WPF / UI)**
-   - Побудований виключно за патерном **MVVM** (Model-View-ViewModel).
-   - Файли Code-Behind (`.xaml.cs`) не містять жодної логіки взаємодії з даними, лише ініціалізацію.
-   - Навігація та передача даних керується через `MainViewModel` та команди (`RelayCommand`).
-   - Використовується **IoC-контейнер** (`Microsoft.Extensions.DependencyInjection`) для забезпечення принципів Dependency Injection та Inversion of Control. Усі сервіси та репозиторії реєструються при старті програми в `App.xaml.cs`.
-
-## Сутності
-- **Рівень 1:** Проєкт (`Project`) - містить загальну інформацію (назва, опис, тип).
-- **Рівень 2:** Завдання (`Task`) - прив'язане до проєкту, має пріоритет, дедлайн та статус виконання.
+## Conclusion (Висновок)
+В ході виконання фінального проєкту було розроблено повнофункціональний багатошаровий застосунок. Було закріплено навички роботи з реляційними базами даних (SQLite) через ORM Entity Framework Core, реалізовано асинхронну модель взаємодії з даними та побудовано гнучкий інтерфейс на базі MVVM. Проєкт відповідає принципам SRP та IoC, забезпечуючи надійну роботу та зручне масштабування.

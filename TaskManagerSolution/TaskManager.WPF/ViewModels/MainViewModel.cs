@@ -35,7 +35,7 @@ namespace TaskManager.WPF.ViewModels
         {
             var detailsPage = new ProjectDetailsPage();
             var viewModel = _serviceProvider.GetRequiredService<ProjectDetailsViewModel>();
-            viewModel.Initialize(projectId);
+            _ = viewModel.InitializeAsync(projectId);
             detailsPage.DataContext = viewModel;
             CurrentPage = detailsPage;
         }
@@ -44,7 +44,7 @@ namespace TaskManager.WPF.ViewModels
         {
             var taskPage = new TaskDetailsPage();
             var viewModel = _serviceProvider.GetRequiredService<TaskDetailsViewModel>();
-            viewModel.Initialize(taskId);
+            _ = viewModel.InitializeAsync(taskId);
             taskPage.DataContext = viewModel;
             CurrentPage = taskPage;
         }

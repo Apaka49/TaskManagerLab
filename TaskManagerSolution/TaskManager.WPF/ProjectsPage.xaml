@@ -3,35 +3,67 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Projects"
       Background="#F3F4F6">
-    <Grid Margin="30">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+    <Grid>
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="My Projects" FontSize="32" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,20" />
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="My Projects" FontSize="32" FontWeight="Bold" Foreground="#1F2937" />
+                <Button Grid.Column="1" Command="{Binding AddProjectCommand}" Content="Add Project" Width="120" Height="40" Background="#10B981" Foreground="White" BorderThickness="0" FontSize="16" FontWeight="Medium">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
 
-        <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="10">
-            <Border.Effect>
-                <DropShadowEffect Color="Gray" BlurRadius="10" ShadowDepth="2" Opacity="0.1"/>
-            </Border.Effect>
-            <ListBox x:Name="ProjectsList" 
-                     ItemsSource="{Binding Projects}"
-                     SelectedItem="{Binding SelectedProject}"
-                     DisplayMemberPath="Title" 
-                     FontSize="18"
-                     Foreground="#374151"
-                     BorderThickness="0"
-                     Background="Transparent">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Padding" Value="10,15"/>
-                        <Setter Property="Margin" Value="0,2"/>
-                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
-                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
-        </Border>
+            <Grid Grid.Row="1" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" FontSize="16" Padding="10" Margin="0,0,10,0" />
+                <Button Grid.Column="1" Command="{Binding SortCommand}" Content="Sort" Width="100" Background="#E5E7EB" BorderThickness="0" FontSize="16" />
+            </Grid>
+
+            <Border Grid.Row="2" Background="White" CornerRadius="10" Padding="10">
+                <Border.Effect>
+                    <DropShadowEffect Color="Gray" BlurRadius="10" ShadowDepth="2" Opacity="0.1"/>
+                </Border.Effect>
+                <ListBox x:Name="ProjectsList"
+                         ItemsSource="{Binding Projects}"
+                         SelectedItem="{Binding SelectedProject}"
+                         DisplayMemberPath="Title"
+                         FontSize="18"
+                         Foreground="#374151"
+                         BorderThickness="0"
+                         Background="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="10,15"/>
+                            <Setter Property="Margin" Value="0,2"/>
+                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Border>
+        </Grid>
+
+        <Grid Background="#80FFFFFF" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#1F2937" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
     </Grid>
 </Page>

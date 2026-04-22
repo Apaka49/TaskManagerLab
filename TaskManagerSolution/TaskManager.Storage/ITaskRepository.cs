@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TaskManager.Storage;
 
 namespace TaskManager.Repositories
 {
     public interface ITaskRepository
     {
-        IEnumerable<TaskStorageModel> GetAllTasks();
-        IEnumerable<TaskStorageModel> GetTasksByProjectId(Guid projectId);
+        Task<IEnumerable<TaskStorageModel>> GetAllTasksAsync();
+        Task<IEnumerable<TaskStorageModel>> GetTasksByProjectIdAsync(Guid projectId);
+        Task<TaskStorageModel> GetTaskByIdAsync(Guid id);
+        Task AddTaskAsync(TaskStorageModel task);
+        Task UpdateTaskAsync(TaskStorageModel task);
+        Task DeleteTaskAsync(Guid id);
     }
 }

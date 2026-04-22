@@ -3,51 +3,91 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Project Details"
       Background="#F3F4F6">
-    <Grid Margin="30">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Style x:Key="ViewElement" TargetType="FrameworkElement">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="EditElement" TargetType="FrameworkElement">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding Project.Title}" FontSize="32" FontWeight="Bold" Foreground="#1F2937" Grid.Row="0" Margin="0,0,0,10" />
-        <TextBlock Text="{Binding Project.Description}" FontSize="18" Foreground="#4B5563" Grid.Row="1" Margin="0,0,0,5" TextWrapping="Wrap" />
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+                <Button Content="Edit" Command="{Binding ToggleEditModeCommand}" Style="{StaticResource ViewElement}" Margin="0,0,10,0" Padding="15,5" Background="#E5E7EB" BorderThickness="0" />
+                <Button Content="Save" Command="{Binding SaveProjectCommand}" Style="{StaticResource EditElement}" Margin="0,0,10,0" Padding="15,5" Background="#10B981" Foreground="White" BorderThickness="0" />
+                <Button Content="Cancel" Command="{Binding ToggleEditModeCommand}" Style="{StaticResource EditElement}" Margin="0,0,10,0" Padding="15,5" Background="#E5E7EB" BorderThickness="0" />
+                <Button Content="Delete" Command="{Binding DeleteProjectCommand}" Padding="15,5" Background="#EF4444" Foreground="White" BorderThickness="0" />
+            </StackPanel>
 
-        <Border Grid.Row="2" Background="#DBEAFE" HorizontalAlignment="Left" CornerRadius="5" Padding="8,4" Margin="0,5,0,25">
-            <TextBlock Text="{Binding Project.Type}" FontSize="14" FontWeight="SemiBold" Foreground="#1E40AF" />
-        </Border>
+            <TextBlock Text="{Binding Project.Title}" FontSize="32" FontWeight="Bold" Foreground="#1F2937" Grid.Row="1" Margin="0,0,0,10" Style="{StaticResource ViewElement}" />
+            <TextBox Text="{Binding Project.Title, UpdateSourceTrigger=PropertyChanged}" FontSize="32" FontWeight="Bold" Foreground="#1F2937" Grid.Row="1" Margin="0,0,0,10" Style="{StaticResource EditElement}" />
 
-        <TextBlock Text="Tasks" FontSize="24" FontWeight="Bold" Foreground="#1F2937" Grid.Row="3" Margin="0,0,0,15" />
+            <TextBlock Text="{Binding Project.Description}" FontSize="18" Foreground="#4B5563" Grid.Row="2" Margin="0,0,0,5" TextWrapping="Wrap" Style="{StaticResource ViewElement}" />
+            <TextBox Text="{Binding Project.Description, UpdateSourceTrigger=PropertyChanged}" FontSize="18" Foreground="#4B5563" Grid.Row="2" Margin="0,0,0,5" TextWrapping="Wrap" Style="{StaticResource EditElement}" AcceptsReturn="True" />
 
-        <Border Grid.Row="4" Background="White" CornerRadius="10" Padding="10">
-            <Border.Effect>
-                <DropShadowEffect Color="Gray" BlurRadius="10" ShadowDepth="2" Opacity="0.1"/>
-            </Border.Effect>
-            <ListBox x:Name="TasksList" 
-                     ItemsSource="{Binding Tasks}"
-                     SelectedItem="{Binding SelectedTask}"
-                     DisplayMemberPath="Title" FontSize="16"
-                     BorderThickness="0" Background="Transparent">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Padding" Value="10,12"/>
-                        <Setter Property="BorderBrush" Value="#E5E7EB"/>
-                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Grid Grid.Row="3" Margin="0,20,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Tasks" FontSize="24" FontWeight="Bold" Foreground="#1F2937" VerticalAlignment="Center" />
+                <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="200" FontSize="16" Padding="5" Margin="0,0,10,0" />
+                <Button Grid.Column="2" Command="{Binding SortCommand}" Content="Sort" Width="80" Background="#E5E7EB" BorderThickness="0" FontSize="16" />
+            </Grid>
+
+            <Border Grid.Row="4" Background="White" CornerRadius="10" Padding="10">
+                <Border.Effect>
+                    <DropShadowEffect Color="Gray" BlurRadius="10" ShadowDepth="2" Opacity="0.1"/>
+                </Border.Effect>
+                <ListBox x:Name="TasksList"
+                         ItemsSource="{Binding Tasks}"
+                         SelectedItem="{Binding SelectedTask}"
+                         DisplayMemberPath="Title" FontSize="16"
+                         BorderThickness="0" Background="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="10,12"/>
+                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Border>
+
+            <Button Content="Back" Command="{Binding BackCommand}" Width="160" Height="40" Grid.Row="5" HorizontalAlignment="Left" Margin="0,25,0,0"
+                    Background="#3B82F6" Foreground="White" FontSize="16" FontWeight="Medium" BorderThickness="0">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="8"/>
                     </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
-        </Border>
+                </Button.Resources>
+            </Button>
+        </Grid>
 
-        <Button Content="← Back to Projects" Command="{Binding BackCommand}" Width="160" Height="40" Grid.Row="5" HorizontalAlignment="Left" Margin="0,25,0,0" 
-                Background="#3B82F6" Foreground="White" FontSize="16" FontWeight="Medium" BorderThickness="0">
-            <Button.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="8"/>
-                </Style>
-            </Button.Resources>
-        </Button>
+        <Grid Background="#80FFFFFF" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="Loading..." FontSize="24" FontWeight="Bold" Foreground="#1F2937" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
     </Grid>
 </Page>

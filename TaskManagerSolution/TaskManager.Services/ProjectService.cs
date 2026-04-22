@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TaskManager.Repositories;
 using TaskManager.Services.DTOs;
+using TaskManager.Storage;
 
 namespace TaskManager.Services
 {
@@ -15,9 +17,10 @@ namespace TaskManager.Services
             _projectRepository = projectRepository;
         }
 
-        public IEnumerable<ProjectListDto> GetAllProjects()
+        public async Task<IEnumerable<ProjectListDto>> GetAllProjectsAsync()
         {
-            return _projectRepository.GetAllProjects().Select(p => new ProjectListDto
+            var projects = await _projectRepository.GetAllProjectsAsync();
+            return projects.Select(p => new ProjectListDto
             {
                 Id = p.Id,
                 Title = p.Title,
@@ -25,9 +28,9 @@ namespace TaskManager.Services
             });
         }
 
-        public ProjectDetailDto GetProjectDetails(Guid projectId)
+        public async Task<ProjectDetailDto> GetProjectDetailsAsync(Guid projectId)
         {
-            var project = _projectRepository.GetAllProjects().FirstOrDefault(p => p.Id == projectId);
+            var project = await _projectRepository.GetProjectByIdAsync(projectId);
             if (project == null) return null;
 
             return new ProjectDetailDto
@@ -37,6 +40,23 @@ namespace TaskManager.Services
                 Description = project.Description,
                 Type = project.Type
             };
+        }
+
+        public async Task AddProjectAsync(ProjectDetailDto projectDto)
+        {
+            var project = new ProjectStorageModel(projectDto.Title, projectDto.Description, projectDto.Type);
+            await _projectRepository.AddProjectAsync(project);
+        }
+
+        public async Task UpdateProjectAsync(ProjectDetailDto projectDto)
+        {
+            var project = new ProjectStorageModel(projectDto.Id, projectDto.Title, projectDto.Description, projectDto.Type);
+            await _projectRepository.UpdateProjectAsync(project);
+        }
+
+        public async Task DeleteProjectAsync(Guid projectId)
+        {
+            await _projectRepository.DeleteProjectAsync(projectId);
         }
     }
 }
